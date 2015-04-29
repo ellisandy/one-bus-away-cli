@@ -1,6 +1,6 @@
 # OneBusAway
 
-TODO: Write a gem description
+This little 'gem' is for easily querying the next avialable bus at a given stop.
 
 ## Installation
 
@@ -20,8 +20,10 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
 
+one-bus-away arrivals-and-departures-for-stop [stop] [route] [arrival time from now]
+
+one-bus-away arrivals-and-departures-for-stop 29215 "44" 15
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/one_bus_away/fork )
