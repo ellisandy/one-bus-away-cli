@@ -17,6 +17,12 @@ And then execute:
 Or install it yourself as:
 
     $ gem install one_bus_away
+	
+Then you will need to create the file ~/.one_bus_away which contains just your API key which can be requested here: http://pugetsound.onebusaway.org/p/OneBusAwayApiService.action
+
+    $ cat ~/.one_bus_away
+	6xxxxxf7-6ec4-45adsf22-bf33-sdfsdfs
+	
 
 ## Usage
 
