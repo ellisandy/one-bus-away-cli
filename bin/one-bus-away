@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'commander/import'
+require 'one_bus_away'
+
+program :version, '0.0.1'
+program :description, 'Simple querying of One Bus Away'
+
+command "current-time" do |c|
+  c.syntax = 'one-bus-away current-time'
+  c.summary = 'Get the current system time from One Bus Away'
+  c.description = 'Makes the current_time API call against the One Bus Away API. Simple, Straightforward, Unneeded'
+  c.example '','one-bus-away current-time'
+  c.action do |args, options|
+    puts OneBusAway.current_time
+    notify 'Something happened'
+  end
+end
+
+command "arrivals-and-departures-for-stop" do |c|
+  c.syntax = 'one-bus-away arrivals-and-departures-for-stop [stop] [route] [arrival time from now]'
+  c.summary = 'Next Arrival Time for a specific Stop'
+  c.description = 'By default, you can get the next available arrival time.'
+  c.example 'description', 'one-bus-away arrivals-and-departures-for-stop [stop] [route] [arrival time from now]'
+  c.action do |args, options|
+# Implement arrivals-and-departures-for-stop [stop] [route]
+    
+    arrivals = OneBusAway.arrivals_and_departures_for_stop(args[0], args[1], args[2])
+    
+    arrivals.each do |arrival|
+      puts "The #{args[1]} arrives in #{arrival}"
+    end
+  end
+end
+
