@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["jack@mnmlst.cc"]
   spec.summary       = "Simple Gem to query One Bus Away API"
   spec.description   = "This is a simple gem to query bus stops, delay times, and additional features. This does require that you apply for an API key from One Bus Away -- http://pugetsound.onebusaway.org/p/OneBusAwayApiService.action"
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/ellisandy/one-bus-away-cli"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

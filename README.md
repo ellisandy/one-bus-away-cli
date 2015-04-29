@@ -26,7 +26,7 @@ one-bus-away arrivals-and-departures-for-stop [stop] [route] [arrival time from 
 one-bus-away arrivals-and-departures-for-stop 29215 "44" 15
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/one_bus_away/fork )
+1. Fork it ( https://github.com/ellisandy/one-bus-away-cli/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
