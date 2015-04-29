@@ -29,7 +29,10 @@ Then you will need to create the file ~/.one_bus_away which contains just your A
 
 one-bus-away arrivals-and-departures-for-stop [stop] [route] [arrival time from now]
 
-one-bus-away arrivals-and-departures-for-stop 29215 "44" 15
+    $ one-bus-away arrivals-and-departures-for-stop 13721 "D Line" 22
+      The D Line arrives in 4 minutes
+      The D Line arrives in 19 minutes
+	  
 ## Contributing
 
 1. Fork it ( https://github.com/ellisandy/one-bus-away-cli/fork )
