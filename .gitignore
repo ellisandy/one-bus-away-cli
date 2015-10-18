@@ -13,5 +13,5 @@
 *.a
 mkmf.log
 .DS_Store
-*.gemspec
+*.gem
 *.quicktask
