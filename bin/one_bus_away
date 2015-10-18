@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'commander/import'
+require_relative '../lib/one_bus_away'
+
+program :version, '0.0.1'
+program :description, 'Simple querying of One Bus Away'
+
+if File.exists? ENV['HOME'] + '/.one_bus_away'
+  @one_bus_away = OneBusAway.new(File.read(ENV['HOME'] + '/.one_bus_away'))
+else
+  fail 'please install your one-bus-away API key into ~/.one_bus_away'
+end
+
+command 'current-time' do |c|
+  c.syntax = 'one-bus-away current-time'
+  c.summary = 'Get the current system time from One Bus Away'
+  c.description = 'Makes the current_time API call against the One Bus Away'\
+    ' API. Simple, Straightforward, Unneeded'
+  c.example '', 'one-bus-away current-time'
+  c.action do
+    puts @one_bus_away.current_time
+  end
+end
+
+command 'arrivals-and-departures-for-stop' do |c|
+  c.syntax = 'one-bus-away arrivals-and-departures-for-stop
+   [stop] [route] [arrival time from now]'
+  c.summary = 'Next Arrival Time for a specific Stop'
+  c.description = 'By default, you can get the next available arrival time.'
+  c.example 'description', 'one-bus-away arrivals-and-departures-for-stop' \
+    ' [stop] [route] [arrival time from now]'
+  c.action do |args|
+    arrivals = @one_bus_away.arrivals_and_departures_for_stop(
+      args[0],
+      args[1],
+      args[2]
+    )
+    if arrivals.empty?
+      puts 'No buses in that time constrain'
+    else
+      arrivals.each do |arrival|
+        puts "The #{args[1]} arrives in #{arrival} minutes"
+      end
+    end
+  end
+end
