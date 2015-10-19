@@ -17,6 +17,7 @@ class OneBusAway
   # FIXME: remove RestClient.get from here, and move it to another method
   Contract String
   def current_time
+    oba_client = OneBusAway::Client
     response = RestClient.get(
       'http://api.pugetsound.onebusaway.org/api/where/'\
       "current-time.json?key=#{@api_key}"

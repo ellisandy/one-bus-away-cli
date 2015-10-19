@@ -7,7 +7,7 @@ require_relative '../lib/one_bus_away'
 program :version, '0.0.1'
 program :description, 'Simple querying of One Bus Away'
 
-if File.exists? ENV['HOME'] + '/.one_bus_away'
+if File.exist? ENV['HOME'] + '/.one_bus_away'
   @one_bus_away = OneBusAway.new(File.read(ENV['HOME'] + '/.one_bus_away'))
 else
   fail 'please install your one-bus-away API key into ~/.one_bus_away'
