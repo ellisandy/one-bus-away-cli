@@ -1,6 +1,10 @@
 # OneBusAway
 
-This little 'gem' is for easily querying the next avialable bus at a given stop.
+This little 'gem' is for easily querying the next available bus at a given stop.
+
+## Pre-reqs
+
+Please have the ruby development packaged installed.
 
 ## Installation
 
