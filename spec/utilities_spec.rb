@@ -1,6 +1,6 @@
 require 'one_bus_away'
 
-RSpec.describe Utilities do
+RSpec.describe OneBusAway::Utilities do
   describe '.convert_time'
 
   describe '.strip_time' do

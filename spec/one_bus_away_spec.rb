@@ -10,5 +10,4 @@ RSpec.describe OneBusAway do
       expect { OneBusAway.new('somestring') }.not_to raise_error
     end
   end
-
 end
