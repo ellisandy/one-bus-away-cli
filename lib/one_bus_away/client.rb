@@ -11,6 +11,7 @@ class OneBusAway
       @base_url = 'api.pugetsound.onebusaway.org'
     end
 
+    # Verifies that @api_method and @api_key are set
     def valid?
       if api_method && api_key
         true
@@ -19,6 +20,7 @@ class OneBusAway
       end
     end
 
+    # Profided that @url is set, HTTP get @url
     def get
       if @url
         @http_response = RestClient.get(@url)
@@ -29,6 +31,7 @@ class OneBusAway
       end
     end
 
+    # Builds a valid url, then sets this string to @url
     def build_url
       nil if valid?
       uri = URI::HTTP.build(
@@ -39,6 +42,7 @@ class OneBusAway
       @url = uri.to_s
     end
 
+    # Builds the path for utilization in #build_url
     def build_path
       path = %w(api where)
       path.concat api_method
@@ -46,12 +50,15 @@ class OneBusAway
       @path = "/#{path}.json"
     end
 
+    # Build query for utilization in #build_url
     def build_query
       query = { key: @api_key }
       query.merge! @parameters if @parameters
       query.map { |k, v| "#{k}=#{v}" }.join('&')
     end
 
+    # Applies ~/.one_bus_away to @api if the file exists
+    # otherwise, it fails.
     def apply_local_api_key
       if File.exist? ENV['HOME'] + '/.one_bus_away'
         file = File.read(ENV['HOME'] + '/.one_bus_away')

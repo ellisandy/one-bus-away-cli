@@ -3,7 +3,6 @@ require 'one_bus_away/client'
 RSpec.describe OneBusAway::Client do
   let(:valid_client) do
     OneBusAway::Client.new(
-      # api_key: 'aer-dkjfwif0d-slkjsdflkjs',
       api_method: ['current-time']
     )
   end
@@ -141,11 +140,13 @@ RSpec.describe OneBusAway::Client do
     end
 
     it 'not nill when calling body' do
-      client = valid_client
-      client.build_url
-      client.get
+      VCR.use_cassette('one_bus_away/current-time') do
+        client = valid_client
+        client.build_url
+        client.get
 
-      expect(client.body).not_to be_nil
+        expect(client.body).not_to be_nil
+      end
     end
   end
 
@@ -174,7 +175,11 @@ RSpec.describe OneBusAway::Client do
       client.parameters = { route: '123532' }
       client.api_method = ['arrivals-and-departures-for-stop', '1_75403']
 
-      expect(valid_client.build_url).to eq('http://api.pugetsound.onebusaway.org/api/where/arrivals-and-departures-for-stop/1_75403.json?key=somekey&route=123532')
+      expect(valid_client.build_url)
+        .to eq('http://api.pugetsound.onebusaway.org'\
+        '/api/where/arrivals-and-departures-for-stop/'\
+        '1_75403.json?key=somekey&route=123532'
+              )
     end
 
     it 'calls valid?' do
@@ -196,22 +201,26 @@ RSpec.describe OneBusAway::Client do
   describe '#http_response' do
     it { expect(invalid_client).to respond_to(:http_response) }
     it 'is set when calling #build_url' do
-      client = valid_client
-      client.build_url
-      client.get
+      VCR.use_cassette('one_bus_away/current-time') do
+        client = valid_client
+        client.build_url
+        client.get
 
-      expect(client.http_response).not_to be_nil
+        expect(client.http_response).not_to be_nil
+      end
     end
   end
 
   describe '#http_state' do
     it { expect(invalid_client).to respond_to(:http_status) }
     it 'is set when calling #get' do
-      client = valid_client
-      client.build_url
-      client.get
+      VCR.use_cassette('one_bus_away/current-time') do
+        client = valid_client
+        client.build_url
+        client.get
 
-      expect(client.http_status).not_to be_nil
+        expect(client.http_status).not_to be_nil
+      end
     end
   end
 end

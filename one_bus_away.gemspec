@@ -26,6 +26,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.2'
   spec.add_development_dependency 'rspec-mocks', '~> 3.2'
+  spec.add_development_dependency 'webmock', '~> 1.22'
+  spec.add_development_dependency 'vcr', '~> 2.9'
   spec.add_development_dependency 'contracts', '~> 0.12'
   spec.add_development_dependency 'guard-rspec', '~> 4.5'
   spec.add_development_dependency 'terminal-notifier-guard', '~> 1.6'
