@@ -1,6 +1,6 @@
 require_relative 'one_bus_away/version'
+require_relative 'one_bus_away/utilities'
 require 'rest-client'
-require 'utilities'
 require 'contracts'
 
 # Main class
@@ -43,7 +43,7 @@ class OneBusAway
       arrivals_and_departures.each do |bus|
         next unless bus['routeShortName'] == route
         outputs.push(
-          Utilities.convert_time(bus['scheduledDepartureTime'].to_s)
+          OneBusAway::Utilities.convert_time(bus['scheduledDepartureTime'].to_s)
         )
       end
       outputs

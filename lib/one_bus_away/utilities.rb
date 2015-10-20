@@ -15,7 +15,7 @@ class OneBusAway
 
     # Removes the last three characters from a string
     Contract String => String
-    def self.strip_time(time)
+    def strip_time(time)
       n = time.size
       time[0..n - 4]
     end

@@ -23,6 +23,8 @@ class OneBusAway
       if @url
         @http_response = RestClient.get(@url)
         @body = @http_response.body
+        @http_status = @http_response.code
+      else
         fail 'url not properly built'
       end
     end
