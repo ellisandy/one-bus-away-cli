@@ -8,6 +8,7 @@ class OneBusAway
     # Short cut for access to Contracts
     C = Contracts
 
+    Contract String => C::Any
     # Converts time into a consumable format
     def self.convert_time(time)
       obj = OneBusAway::Utilities.new
