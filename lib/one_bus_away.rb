@@ -11,7 +11,16 @@ class OneBusAway
   # Shortcut for utilizing Contracts
   C = Contracts
 
+  attr_accessor :api_method, :input, :parameters
+  attr_reader :client, :output
+
   # Contract String => String
-  def initialize
+  # def initialize
+  # end
+
+  def current_time
+    @client = OneBusAway::Client.new
+    # @client.build_url
+    @client.get
   end
 end
