@@ -16,10 +16,8 @@ class OneBusAway
   def initialize
   end
 
-  def self.get_location(loc)
+  def get_location(loc)
     geo = Geocoder.search("#{loc} seattle")
-    lat = geo[0].latitude
-    lon = geo[0].longitude
-    return lat, lon
+    lat,lon = geo[0].latitude, geo[0].longitude
   end
 end
