@@ -23,7 +23,7 @@ class OneBusAway
       end
     end
 
-    # Profided that @url is set, HTTP get @url
+    # Provided that @url is set, HTTP get @url
     def get
       if @url
         response = RestClient.get(@url)

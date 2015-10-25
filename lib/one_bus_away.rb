@@ -1,6 +1,7 @@
 require_relative 'one_bus_away/version'
 require_relative 'one_bus_away/utilities'
 require_relative 'one_bus_away/client'
+require 'geocoder'
 
 # Main class
 # defines the way to interact with everything
@@ -50,5 +51,10 @@ class OneBusAway
       array << { bus.routeShortName => time }
     end
     array
+  end
+
+  def get_location(loc)
+    geo = Geocoder.search("#{loc} seattle")
+    lat,lon = geo[0].latitude, geo[0].longitude
   end
 end

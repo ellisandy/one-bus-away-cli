@@ -38,4 +38,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'recursive-open-struct', '~> 0.6'
   spec.add_dependency 'activesupport', '~> 4.2.4'
   spec.add_dependency 'actionview', '~> 4.2.4'
+  spec.add_dependency 'geocoder', '~> 1.2.11'
 end
