@@ -35,4 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov', '~> 0.10'
   spec.add_dependency 'commander', '~> 4.3'
   spec.add_dependency 'rest-client', '~> 1.8'
+  spec.add_dependency 'recursive-open-struct', '~> 0.6'
+  spec.add_dependency 'activesupport', '~> 4.2.4'
+  spec.add_dependency 'actionview', '~> 4.2.4'
 end

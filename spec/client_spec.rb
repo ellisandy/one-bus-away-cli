@@ -36,7 +36,11 @@ RSpec.describe OneBusAway::Client do
     it 'fails if file does not exists' do
       allow(File).to receive(:exist?).and_return(false)
 
-      expect { invalid_client.apply_local_api_key }.to raise_error
+      expect { invalid_client.apply_local_api_key }
+        .to raise_error(RuntimeError, 'no API key provided. '\
+                        'Please ensure you have your api key'\
+                        'installed in here: ~/.one_bus_away'
+                       )
     end
     it 'succeeds if file exists' do
       file_like_object = '123-12321321-1234jsdkfjsd'
@@ -130,23 +134,8 @@ RSpec.describe OneBusAway::Client do
     it 'fails if url not built' do
       client = invalid_client
 
-      expect { client.get }.to raise_error
-    end
-  end
-
-  describe '#body' do
-    it 'responds' do
-      expect(invalid_client).to respond_to(:body)
-    end
-
-    it 'not nill when calling body' do
-      VCR.use_cassette('one_bus_away/current-time') do
-        client = valid_client
-        client.build_url
-        client.get
-
-        expect(client.body).not_to be_nil
-      end
+      expect { client.get }
+        .to raise_error(RuntimeError, 'url is not properly built')
     end
   end
 
@@ -166,7 +155,8 @@ RSpec.describe OneBusAway::Client do
       client.parameters = nil
       client.api_method = ['current_time']
 
-      expect(valid_client.build_url).to eq('http://api.pugetsound.onebusaway.org/api/where/current_time.json?key=somekey')
+      expect(valid_client.build_url)
+        .to eq('http://api.pugetsound.onebusaway.org/api/where/current_time.json?key=somekey')
     end
 
     it 'returns correct url without parameters' do
@@ -185,6 +175,13 @@ RSpec.describe OneBusAway::Client do
     it 'calls valid?' do
       expect(valid_client).to receive(:valid?)
       valid_client.build_url
+    end
+
+    it 'returns false with valid? false' do
+      client = invalid_client
+      client.build_url
+
+      expect(client.url).to be_nil
     end
   end
 
@@ -207,19 +204,6 @@ RSpec.describe OneBusAway::Client do
         client.get
 
         expect(client.http_response).not_to be_nil
-      end
-    end
-  end
-
-  describe '#http_state' do
-    it { expect(invalid_client).to respond_to(:http_status) }
-    it 'is set when calling #get' do
-      VCR.use_cassette('one_bus_away/current-time') do
-        client = valid_client
-        client.build_url
-        client.get
-
-        expect(client.http_status).not_to be_nil
       end
     end
   end

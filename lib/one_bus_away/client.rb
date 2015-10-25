@@ -1,8 +1,11 @@
+require 'rest-client'
+require 'recursive-open-struct'
+
 class OneBusAway
   # Class for establishing a connection to one bus away
   class Client
     attr_accessor :api_method, :api_key, :parameters
-    attr_reader :body, :base_url, :url, :http_response, :http_status
+    attr_reader :base_url, :url, :http_response
 
     def initialize(options = {})
       @api_method = options[:api_method]
@@ -23,23 +26,23 @@ class OneBusAway
     # Profided that @url is set, HTTP get @url
     def get
       if @url
-        @http_response = RestClient.get(@url)
-        @body = @http_response.body
-        @http_status = @http_response.code
+        response = RestClient.get(@url)
+        json = JSON.parse(response)
+        @http_response = RecursiveOpenStruct.new(
+          json, recurse_over_arrays: true
+        )
       else
-        fail 'url not properly built'
+        fail 'url is not properly built'
       end
     end
 
     # Builds a valid url, then sets this string to @url
     def build_url
-      nil if valid?
-      uri = URI::HTTP.build(
+      @url = URI::HTTP.build(
         host: @base_url,
         path: build_path,
         query: build_query
-      )
-      @url = uri.to_s
+      ).to_s if valid?
     end
 
     # Builds the path for utilization in #build_url

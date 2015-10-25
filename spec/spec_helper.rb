@@ -3,10 +3,9 @@ require 'webmock/rspec'
 require 'vcr'
 
 VCR.configure do |c|
-  # the directory where your cassettes will be saved
   c.cassette_library_dir = 'spec/vcr'
-  # your HTTP request service.
   c.hook_into :webmock
+  c.configure_rspec_metadata!
 end
 SimpleCov.start
 WebMock.disable_net_connect!(allow_localhost: true)
