@@ -53,8 +53,11 @@ class OneBusAway
     array
   end
 
+  # Uses the google API to git the long and lat of a given location
   def get_location(loc)
     geo = Geocoder.search("#{loc} seattle")
-    lat,lon = geo[0].latitude, geo[0].longitude
+    lat = geo[0].latitude
+    lon = geo[0].longitude
+    [lon, lat]
   end
 end

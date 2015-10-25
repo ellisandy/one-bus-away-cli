@@ -116,17 +116,16 @@ RSpec.describe OneBusAway do
       one_bus_away.arrivals_and_departures_for_stop(19_360)
 
       expect(one_bus_away.filter_by_route).to be_kind_of(Array)
+    end
+  end
 
-  describe '#get_location' do
+  describe '#get_location', :vcr do
     it { expect(OneBusAway.new).to respond_to(:get_location) }
     it 'returns the latitude and longitude of a given address in Seattle' do
-      loc = "400 Broad St"
-      obj=OneBusAway.new
+      address = '400 Broad St'
+      location = one_bus_away.get_location(address)
 
-      lat,lon=obj.get_location(loc)
-
-      expect(lat).to eq(47.620537)
-      expect(lon).to eq(-122.3491348)
+      expect(location).to eq([-122.3491348, 47.6205379])
     end
   end
 end
