@@ -1,87 +1,60 @@
 require_relative 'one_bus_away/version'
-require 'rest-client'
-require 'utilities'
-require 'contracts'
+require_relative 'one_bus_away/utilities'
+require_relative 'one_bus_away/client'
+require 'geocoder'
 
 # Main class
 # defines the way to interact with everything
 class OneBusAway
-  include Contracts::Core
-  C = Contracts
+  attr_accessor :api_method, :parameters
+  attr_reader :client, :data, :http_response
 
-  Contract String => String
-  def initialize(api_key)
-    @api_key = api_key
+  def initialize(options = {})
+    @api_method = options[:api_method]
+    @parameters = options[:parameters]
   end
 
-  # FIXME: remove RestClient.get from here, and move it to another method
-  Contract String
+  # Returns the current time from the One Bus Away System
   def current_time
-    response = RestClient.get(
-      'http://api.pugetsound.onebusaway.org/api/where/'\
-      "current-time.json?key=#{@api_key}"
+    @client = OneBusAway::Client.new(
+      api_method: ['current-time']
     )
-    json = JSON.parse(response)
-    time = json['data']['entry']['time']
-    time.to_s
+    call_api
   end
 
-  # Contract C::Num, C::Or[C::Num, String], C::Num => C::ArrayOf[C::Any]
-  def arrivals_and_departures_for_stop(stop, route, time_to_look_for)
-    if valid_stop?(stop) && valid_route?(route)
-      response = RestClient.get(
-        'http://api.pugetsound.onebusaway.org/api/where/'\
-        "arrivals-and-departures-for-stop/1_#{stop}.json?"\
-        "key=#{@api_key}&minutesAfter=#{time_to_look_for}"
-      )
-      json = JSON.parse(response)
-      arrivals_and_departures = json['data']['entry']['arrivalsAndDepartures']
-
-      outputs = []
-
-      arrivals_and_departures.each do |bus|
-        next unless bus['routeShortName'] == route
-        outputs.push(
-          Utilities.convert_time(bus['scheduledDepartureTime'].to_s)
-        )
-      end
-      outputs
-
-    else
-      fail 'Either your route or stop is invalid.'
-    end
+  # get arrivales and departunes for a stop with one arguement
+  def arrivals_and_departures_for_stop(stop)
+    @client = OneBusAway::Client.new(
+      api_method: ['arrivals-and-departures-for-stop', "1_#{stop}"]
+    )
+    call_api
   end
 
-  # Contract C::Num => C::Bool
-  def valid_stop?(stop_number)
-    response = RestClient.get(
-      'http://api.pugetsound.onebusaway.org/api/where/'\
-      "stop-ids-for-agency/1.json?key=#{@api_key}"
-    )
-    json = JSON.parse(response)
-
-    if json['code'] == 200
-      json['data']['list'].include? "1_#{stop_number}"
-    else
-      fail "OneBusAway API HTTP response error #{json['code']}"
-    end
+  # Assigns the http data to the @data instance variable
+  def assign_data
+    @data = client.http_response.data
   end
 
-  # Contract C::Or[C::Num, String] => C::Bool
-  def valid_route?(route_name)
-    response = RestClient.get(
-      'http://api.pugetsound.onebusaway.org/api/where/'\
-      "routes-for-agency/1.json?key=#{@api_key}"
-    )
-    json = JSON.parse(response)
+  # Short hand for building the URL, calling the API, and assigning the data
+  # to @data
+  def call_api
+    @client.build_url
+    @client.get
+    assign_data
+  end
 
-    if json['code'] == 200
-      array = []
-      json['data']['list'].map { |x| array.push x['shortName'] }
-
-      array.include? route_name.to_s
-    else
-      fail "OneBusAway API HTTP response error #{json['code']}"
+  # filter the route by a specific route
+  def filter_by_route
+    array = []
+    data.entry.arrivalsAndDepartures.each do |bus|
+      time = OneBusAway::Utilities.convert_time bus.scheduledDepartureTime
+      array << { bus.routeShortName => time }
     end
+    array
+  end
+
+  def get_location(loc)
+    geo = Geocoder.search("#{loc} seattle")
+    lat,lon = geo[0].latitude, geo[0].longitude
   end
 end

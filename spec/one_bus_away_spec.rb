@@ -1,42 +1,132 @@
 require 'one_bus_away'
 
 RSpec.describe OneBusAway do
+  let(:one_bus_away) { OneBusAway.new }
+
   describe '.new' do
-    it 'should raise error without arguements' do
-      expect { OneBusAway.new }.to raise_error
+    it 'responds' do
+      expect(OneBusAway).to respond_to(:new)
     end
 
-    it 'should accept API_KEY as arguement' do
-      expect { OneBusAway.new('somestring') }.not_to raise_error
+    it 'has an accessor for parameters' do
+      one_bus_away.parameters = 'parameters'
+
+      expect(one_bus_away.parameters).to eq('parameters')
+    end
+
+    it 'has an accessor for api_method' do
+      one_bus_away.api_method = 'method'
+
+      expect(one_bus_away.api_method).to eq('method')
+    end
+
+    it 'has a reader client' do
+      expect(one_bus_away).to respond_to(:client)
+    end
+
+    it 'does not have a writer for client' do
+      expect { one_bus_away.client = '' }.to raise_error(NoMethodError)
     end
   end
 
-  describe '#current_time' do
-    let(:one_bus_away) do
-      OneBusAway.new('6a1c72f7-6ec4-4522-bf33-3698b3ad86c2')
+  describe '#assign_data' do
+    let(:valid_client) { OneBusAway.new }
+
+    it 'responds' do
+      expect(one_bus_away).to respond_to(:assign_data)
     end
-    it 'to not raise an error' do
-      expect { one_bus_away.current_time }.not_to raise_error
+
+    it 'assigns @data', :vcr do
+      one_bus_away.current_time
+
+      expect(one_bus_away.data.entry.time).to eq(1_445_727_779_101)
     end
   end
 
-  describe '#arrivals_and_departures_for_stop' do
-    let(:one_bus_away) do
-      OneBusAway.new('6a1c72f7-6ec4-4522-bf33-3698b3ad86c2')
-    end
-    it 'returns true' do
-      expect do
-        one_bus_away.arrivals_and_departures_for_stop('18145', 40, 10)
-      end.not_to raise_error
+  describe '#data' do
+    it { is_expected.to respond_to(:data) }
+  end
+
+  describe '#call_api', :vcr do
+    it { is_expected.to respond_to(:call_api) }
+
+    it 'sets @data' do
+      one_bus_away.current_time
+
+      expect(one_bus_away.data).to be_kind_of(RecursiveOpenStruct)
     end
   end
 
-  describe '#valid_stop?' do
-    let(:one_bus_away) do
-      OneBusAway.new('6a1c72f7-6ec4-4522-bf33-3698b3ad86c2')
+  describe '#current_time', :vcr do
+    let(:one_bus_away_client) { allow_any_instance_of(OneBusAway::Client) }
+
+    it 'responds' do
+      expect(one_bus_away).to respond_to(:current_time)
     end
-    it 'returns true' do
-      expect { one_bus_away.valid_stop?('18145') }.not_to raise_error
+
+    it 'creates @client' do
+      one_bus_away.current_time
+
+      expect(one_bus_away.client).to be_a(OneBusAway::Client)
+    end
+
+    it 'fails if .build_url doesnt validate' do
+      one_bus_away_client.to receive(:valid?).and_return(false)
+      allow_any_instance_of(OneBusAway)
+        .to receive(:assign_data)
+        .and_return(true)
+
+      expect { one_bus_away.current_time }
+        .to raise_error(RuntimeError, 'url is not properly built')
+    end
+
+    it 'sets http_response' do
+      one_bus_away.current_time
+
+      expect(one_bus_away.client.http_response.code).to eq(200)
+    end
+  end
+
+  describe '#arrivals-and-departures-for-stop', :vcr do
+    let(:one_bus_away_client) { allow_any_instance_of(OneBusAway::Client) }
+
+    it 'responds with 1 arguments' do
+      expect(one_bus_away)
+        .to respond_to(:arrivals_and_departures_for_stop)
+        .with(1).argument
+    end
+
+    it 'creates @client' do
+      one_bus_away.arrivals_and_departures_for_stop(1_234_567)
+
+      expect(one_bus_away.client).to be_a(OneBusAway::Client)
+    end
+
+    it 'sets http_response' do
+      one_bus_away.arrivals_and_departures_for_stop(19_360)
+
+      expect(one_bus_away.client.http_response.code).to eq(200)
+    end
+  end
+
+  describe '#filter_by_route', :vcr do
+    it { is_expected.to respond_to(:filter_by_route) }
+
+    it 'outputs array' do
+      one_bus_away.arrivals_and_departures_for_stop(19_360)
+
+      expect(one_bus_away.filter_by_route).to be_kind_of(Array)
+
+  describe '#get_location' do
+    it { expect(OneBusAway.new).to respond_to(:get_location) }
+    it 'returns the latitude and longitude of a given address in Seattle' do
+      loc = "400 Broad St"
+      obj=OneBusAway.new
+
+      lat,lon=obj.get_location(loc)
+
+      expect(lat).to eq(47.620537)
+      expect(lon).to eq(-122.3491348)
     end
   end
 end

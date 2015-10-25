@@ -1,23 +1,25 @@
 require 'one_bus_away'
 
-RSpec.describe Utilities do
-  describe '.convert_time'
+RSpec.describe OneBusAway::Utilities do
+  describe '.convert_time' do
+    it { expect(OneBusAway::Utilities).to respond_to(:convert_time) }
 
-  describe '.strip_time' do
-    it 'raises error when now parameters are provided' do
-      expect { Utilities.strip_time }.to raise_error
-    end
+    # Format from OBA API is Time as integer * 1000
+    it 'returns the correct format' do
+      time = (Time.now + 240).to_i * 1000
 
-    it 'does not raise an error' do
-      expect { Utilities.strip_time('12345679') }.not_to raise_error
-    end
-
-    it 'returns four less characters' do
-      string = '1234567890'
-
-      expect(Utilities.strip_time(string).length).to eq(string.length - 3)
+      expect(OneBusAway::Utilities.convert_time(time))
+        .to eq('4 minutes')
     end
   end
 
-  describe 'distance_of_time_in_hours_and_minutes'
+  describe '#strip_time' do
+    it { expect(OneBusAway::Utilities.new).to respond_to(:strip_time) }
+    it 'removes the last for characters' do
+      time = '1445318245161'
+      obj = OneBusAway::Utilities.new
+
+      expect(obj.strip_time(time)).to eq('1445318245')
+    end
+  end
 end
